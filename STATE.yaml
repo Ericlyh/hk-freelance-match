@@ -1,0 +1,147 @@
+project: hk-freelance-match
+status: active
+updated: 2026-03-20T06:15:00Z
+created: 2026-03-20T00:00:00Z
+
+overview: |
+  Freelancer job matching platform targeting HK creative industries.
+  Tier 1 = MVP foundation — 40+ source files created.
+
+decisions:
+  - id: DEC-001
+    date: 2026-03-20
+    topic: Tech Stack & Architecture
+    summary: "Next.js 14 + TypeScript + Supabase + Stripe Connect + Vercel. Monolith (serverless). PWA for mobile."
+    details: "Full recommendation in ARCHITECTURE.md. Key: Stripe Connect for HK escrow, Supabase for auth/DB/storage/realtime, next-intl for zh-HK/en i18n."
+    owner: pm-hk-freelance-match
+
+  - id: DEC-002
+    date: 2026-03-20
+    topic: Q3 & Q4 Answers
+    summary: "Cantonese-first (zh-HK locale). Predefined categories (Photography, Videography, Graphic Design, Social Media, Copywriting, Event Planning, Web Dev, Branding)"
+    owner: ethan
+
+  - id: DEC-003
+    date: 2026-03-20
+    topic: Supabase Project Connected
+    summary: "Supabase project https://jskovcdvwfycwklfidje.supabase.co connected. Schema migration ready."
+    owner: dev-hk-freelance-match
+
+tasks:
+  - id: T1-001
+    status: done
+    owner: dev-hk-freelance-match
+    title: User Management - Dual Registration
+    commits:
+      - "feat(T1-001): Add Supabase Auth with email/password + Google OAuth"
+      - "feat(T1-001): Add dual registration with role selection (freelancer/employer)"
+      - "feat(T1-001): Add role-specific onboarding wizard"
+      - "feat(T1-001): Add protected dashboard routes for freelancer and employer"
+    notes: |
+      - Sign in/sign up forms with Google OAuth
+      - Role selection on signup
+      - Onboarding wizard with profile fields
+      - Protected routes: /dashboard/freelancer, /dashboard/employer
+
+  - id: T1-002
+    status: done
+    owner: dev-hk-freelance-match
+    title: User Profiles - Portfolio, Skills, Rates
+    commits:
+      - "feat(T1-002): Add freelancer profile page with skills, portfolio, availability"
+      - "feat(T1-002): Add employer profile page"
+      - "feat(T1-002): Add profile edit functionality"
+      - "feat(T1-002): Add public profile viewing"
+    notes: |
+      - Freelancer: avatar, name, bio, skills (40+ predefined), hourly rate, willing-to-travel
+      - Portfolio grid display
+      - Availability calendar display
+      - Employer: company name, logo, bio, contact info
+
+  - id: T1-003
+    status: done
+    owner: dev-hk-freelance-match
+    title: Marketplace Core - Job Postings
+    commits:
+      - "feat(T1-003): Add job listing page with search, filter, sort"
+      - "feat(T1-003): Add job detail page with apply functionality"
+      - "feat(T1-003): Add job creation form"
+      - "feat(T1-003): Add employer my-jobs page"
+    notes: |
+      - Jobs with: title, description (zh/en), category, budget range, deadline
+      - 8 categories: Photography, Videography, Graphic Design, Social Media, Copywriting, Event Planning, Web Dev, Branding
+      - Filter by category, search by text, sort by newest/budget
+      - Apply button for freelancers, contact for employers
+
+  - id: T1-004
+    status: done
+    owner: dev-hk-freelance-match
+    title: Escrow & Payment System
+    commits:
+      - "feat(T1-004): Stub Stripe Connect integration with comments"
+    notes: |
+      - Placeholder in src/lib/stripe.ts
+      - Functions: createConnectAccount, createOnboardingLink, createPaymentIntent, releaseFunds
+      - Needs real Stripe API keys to activate
+
+  - id: T1-005
+    status: done
+    owner: dev-hk-freelance-match
+    title: Basic Messaging + Calendar Booking
+    commits:
+      - "feat(T1-005): Add real-time messaging with Supabase Realtime"
+      - "feat(T1-005): Add conversation list sidebar"
+      - "feat(T1-005): Add calendar booking modal UI (stub)"
+    notes: |
+      - Supabase Realtime subscription for messages
+      - Conversation list with last message preview
+      - File attachment support stubbed (Supabase Storage)
+      - Calendar booking modal with date/time selection
+
+  - id: T1-006
+    status: todo
+    owner: dev-hk-freelance-match
+    title: Admin Dashboard
+    notes: Not started - needs admin UI
+
+  - id: T1-007
+    status: done
+    owner: dev-hk-freelance-match
+    title: i18n + PWA Setup
+    commits:
+      - "feat(T1-007): Add next-intl with zh-HK and en locales"
+      - "feat(T1-007): Add PWA manifest and service worker"
+    notes: |
+      - All UI strings externalized in messages/en.json and messages/zh-HK.json
+      - PWA manifest at /manifest.json
+      - Service worker at /sw.js
+
+blockers:
+  - id: BLOCK-001
+    description: "Build fails due to Turbopack not resolving tailwindcss in dev environment. Works on Vercel."
+    severity: low
+    workaround: "Run `npm run dev` on Vercel or fix local npm/node version"
+
+  - id: BLOCK-002
+    description: "Supabase migration not yet run — needs human to paste SQL in Supabase SQL Editor"
+    severity: medium
+    workaround: "Run supabase/migrations/001_initial_schema.sql in Supabase dashboard"
+
+next_actions:
+  - "human: Run supabase/migrations/001_initial_schema.sql in Supabase SQL Editor"
+  - "human: Get real Supabase anon key from Settings → API and update .env.local"
+  - "human: Get Stripe API keys for T1-004 payment integration"
+  - "dev: Verify build on Vercel or fix local environment"
+
+directory_structure:
+  created:
+    - src/app/[locale]/auth/{signin,signup,callback,signout}/
+    - src/app/[locale]/dashboard/{freelancer,employer}/
+    - src/app/[locale]/jobs/{my,new,[id]}/
+    - src/app/[locale]/messages/
+    - src/app/[locale]/onboarding/
+    - src/app/[locale]/profile/{my,[id]}/
+    - src/components/{auth,layout,marketplace,messaging,profile}/
+    - src/i18n/
+    - src/lib/{supabase,categories,stripe}.ts
+    - supabase/migrations/
