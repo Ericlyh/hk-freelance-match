@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import Link from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
