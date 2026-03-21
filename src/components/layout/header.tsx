@@ -29,11 +29,14 @@ interface HeaderProps {
 export function Header({ locale, user }: HeaderProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const isZh = locale === 'zh-HK';
 
   const navItems = [
     { href: `/${locale}`, label: t('nav.home'), icon: Home },
     { href: `/${locale}/jobs`, label: t('nav.jobs'), icon: Briefcase },
     { href: `/${locale}/messages`, label: t('nav.messages'), icon: MessageSquare },
+    { href: `/${locale}/how-it-works`, label: isZh ? '使用教學' : 'How It Works', icon: Briefcase },
+    { href: `/${locale}/faq`, label: isZh ? '常見問題' : 'FAQ', icon: MessageSquare },
   ];
 
   const dashboardLink = user?.role === 'employer'
