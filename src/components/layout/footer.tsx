@@ -1,14 +1,18 @@
-'use client';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 interface FooterProps {
   locale: string;
 }
 
-export function Footer({ locale }: FooterProps) {
-  const t = useTranslations();
+export async function Footer({ locale }: FooterProps) {
+  const t = await getTranslations({ locale });
   const currentYear = new Date().getFullYear();
+  const otherLocale = locale === 'zh-HK' ? 'en' : 'zh-HK';
+  const localeNames: Record<string, string> = {
+    'zh-HK': '繁體中文',
+    'en': 'English',
+  };
 
   return (
     <footer className="border-t bg-background">
@@ -100,19 +104,12 @@ export function Footer({ locale }: FooterProps) {
             {t('footer.copyright', { year: currentYear })}
           </p>
           <div className="flex gap-4">
-            <select
-              className="rounded-md border bg-background px-2 py-1 text-sm"
-              value={locale}
-              onChange={(e) => {
-                const newLocale = e.target.value;
-                const pathname = window.location.pathname;
-                const newPathname = pathname.replace(`/${locale}`, `/${newLocale}`);
-                window.location.href = newPathname;
-              }}
+            <Link
+              href={`/${otherLocale}`}
+              className="rounded-md border bg-background px-2 py-1 text-sm hover:bg-muted"
             >
-              <option value="zh-HK">繁體中文</option>
-              <option value="en">English</option>
-            </select>
+              {localeNames[otherLocale]}
+            </Link>
           </div>
         </div>
       </div>
