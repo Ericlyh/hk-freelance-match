@@ -59,7 +59,8 @@
     "welcomeBack": "歡迎回來",
     "createAccount": "建立帳戶",
     "chooseRole": "選擇你的角色",
-    "continueAs": "以 {role} 身份繼續"
+    "continueAs": "以 {role} 身份繼續",
+    "register": "註冊"
   },
   "onboarding": {
     "welcome": "歡迎加入！",

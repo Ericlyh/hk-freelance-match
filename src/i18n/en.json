@@ -59,7 +59,8 @@
     "welcomeBack": "Welcome back",
     "createAccount": "Create Account",
     "chooseRole": "Choose your role",
-    "continueAs": "Continue as {role}"
+    "continueAs": "Continue as {role}",
+    "register": "Register"
   },
   "onboarding": {
     "welcome": "Welcome aboard!",
@@ -212,7 +213,7 @@
     "serverError": "Server error"
   },
   "footer": {
-    "copyright": "© {year} HK Freelance Match",
+    "copyright": "\u00a9 {year} HK Freelance Match",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "contact": "Contact Us",
