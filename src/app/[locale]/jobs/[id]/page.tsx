@@ -1,7 +1,7 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -17,12 +17,11 @@ import { ArrowLeft, MapPin, Clock, DollarSign, Briefcase, Building2, Calendar, S
 import { toast } from 'sonner';
 import type { Job, Profile, Application } from '@/lib/supabase/types';
 
-interface JobDetailPageProps {
-  params: Promise<{ locale: string; id: string }>;
-}
 
-export default function JobDetailPage({ params }: JobDetailPageProps) {
-  const { locale, id } = use(params) as { locale: string; id: string };
+export default function JobDetailPage() {
+  const params = useParams();
+  const locale = params.locale as string;
+  const id = params.id as string;
   const t = useTranslations();
   const router = useRouter();
   const supabase = createBrowserClient();

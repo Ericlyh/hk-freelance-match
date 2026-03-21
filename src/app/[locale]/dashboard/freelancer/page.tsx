@@ -1,7 +1,7 @@
 'use client';
 import { redirect } from 'next/navigation';
 import { Link } from '@/i18n/routing';
-import { createClient } from '@/lib/supabase/server';
+import { createBrowserClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ interface DashboardPageProps {
 export default async function FreelancerDashboardPage({ params }: DashboardPageProps) {
   const { locale } = params;
   const t = useTranslations();
-  const supabase = await createClient();
+  const supabase = createBrowserClient();
 
   const { data: { user } } = await supabase.auth.getUser();
 

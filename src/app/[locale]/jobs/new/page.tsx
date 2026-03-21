@@ -1,7 +1,7 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -14,14 +14,12 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import { JOB_CATEGORIES } from '@/lib/categories';
 import { ArrowLeft, Briefcase } from 'lucide-react';
 import { toast } from 'sonner';
-import { redirect } from 'next/navigation';
 
-interface NewJobPageProps {
-  params: Promise<{ locale: string }>;
-}
 
-export default function NewJobPage({ params }: NewJobPageProps) {
-  const { locale } = use(params) as { locale: string };
+
+export default function NewJobPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const t = useTranslations();
   const router = useRouter();
   const supabase = createBrowserClient();
