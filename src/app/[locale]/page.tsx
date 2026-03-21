@@ -7,11 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { Briefcase, Users, MessageSquare, Shield, ArrowRight, Star } from 'lucide-react';
 
 interface HomePageProps {
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }
 
 export default async function HomePage({ params }: HomePageProps) {
-  const { locale } = await params;
+  const { locale } = params;
   const t = useTranslations();
 
   const features = [

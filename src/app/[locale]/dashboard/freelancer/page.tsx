@@ -9,11 +9,11 @@ import { Briefcase, DollarSign, FileText, MessageSquare, TrendingUp, ArrowRight 
 import { useTranslations } from 'next-intl';
 
 interface DashboardPageProps {
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }
 
 export default async function FreelancerDashboardPage({ params }: DashboardPageProps) {
-  const { locale } = await params;
+  const { locale } = params;
   const t = useTranslations();
   const supabase = await createClient();
 

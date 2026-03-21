@@ -3,12 +3,12 @@ import { createClient } from '@/lib/supabase/server';
 import { OnboardingWizard } from '@/components/auth/onboarding-wizard';
 
 interface OnboardingPageProps {
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
   searchParams: Promise<{ role?: string }>;
 }
 
 export default async function OnboardingPage({ params, searchParams }: OnboardingPageProps) {
-  const { locale } = await params;
+  const { locale } = params;
   const { role } = await searchParams;
 
   const supabase = await createClient();

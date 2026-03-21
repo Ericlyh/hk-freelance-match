@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Building2 } from 'lucide-react';
 
 interface ProfilePageProps {
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }
 
 export default async function MyProfilePage({ params }: ProfilePageProps) {
-  const { locale } = await params;
+  const { locale } = params;
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();

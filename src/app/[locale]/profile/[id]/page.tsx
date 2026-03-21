@@ -9,11 +9,11 @@ import { Separator } from '@/components/ui/separator';
 import { MapPin, DollarSign, Mail, Calendar } from 'lucide-react';
 
 interface ProfilePageProps {
-  params: Promise<{ locale: string; id: string }>;
+  params: { locale: string; id: string };
 }
 
 export default async function PublicProfilePage({ params }: ProfilePageProps) {
-  const { locale, id } = await params;
+  const { locale, id } = params;
   const supabase = await createClient();
 
   // Get the profile

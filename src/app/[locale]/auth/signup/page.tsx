@@ -1,12 +1,12 @@
 import { SignUpForm } from '@/components/auth/auth-form';
 
 interface SignUpPageProps {
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
   searchParams: Promise<{ role?: string }>;
 }
 
 export default async function SignUpPage({ params, searchParams }: SignUpPageProps) {
-  const { locale } = await params;
+  const { locale } = params;
   const { role } = await searchParams;
 
   const initialRole = role === 'employer' ? 'employer' : role === 'freelancer' ? 'freelancer' : undefined;

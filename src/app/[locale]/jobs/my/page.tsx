@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Plus, Briefcase, Users, MoreHorizontal } from 'lucide-react';
 
 interface MyJobsPageProps {
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }
 
 export default async function MyJobsPage({ params }: MyJobsPageProps) {
-  const { locale } = await params;
+  const { locale } = params;
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
