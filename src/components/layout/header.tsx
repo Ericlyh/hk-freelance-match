@@ -98,20 +98,20 @@ export function Header({ locale, user }: HeaderProps) {
                     </div>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem>
                     <Link href={`/${locale}/profile`} className="flex items-center">
                       <User className="mr-2 h-4 w-4" />
                       {t('nav.myProfile')}
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem>
                     <Link href={`/${locale}/settings`} className="flex items-center">
                       <Settings className="mr-2 h-4 w-4" />
                       {t('nav.settings')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem>
                     <Link href={`/${locale}/auth/signout`} className="flex items-center">
                       <LogOut className="mr-2 h-4 w-4" />
                       {t('common.logout')}

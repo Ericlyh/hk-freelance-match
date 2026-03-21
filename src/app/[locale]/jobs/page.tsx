@@ -63,7 +63,7 @@ export default function JobsPage({ params }: JobsPageProps) {
       if (error) {
         console.error('Error fetching jobs:', error);
       } else {
-        let filteredJobs = data || [];
+        let filteredJobs = (data || []) as Job[];
 
         // Apply search filter client-side for full-text search
         if (search) {
@@ -118,7 +118,7 @@ export default function JobsPage({ params }: JobsPageProps) {
               />
             </div>
 
-            <Select value={category} onValueChange={setCategory}>
+            <Select value={category} onValueChange={(value) => setCategory(value || '')}>
               <SelectTrigger className="w-full md:w-[200px]">
                 <SelectValue placeholder={t('jobs.category')} />
               </SelectTrigger>
@@ -132,7 +132,7 @@ export default function JobsPage({ params }: JobsPageProps) {
               </SelectContent>
             </Select>
 
-            <Select value={sortBy} onValueChange={setSortBy}>
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value || '')}>
               <SelectTrigger className="w-full md:w-[200px]">
                 <SelectValue placeholder={t('jobs.sortBy')} />
               </SelectTrigger>

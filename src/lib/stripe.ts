@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 // In production, replace with actual Stripe Connect implementation
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2026-02-25.clover',
   typescript: true,
 });
 

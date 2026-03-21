@@ -203,7 +203,7 @@ export default function NewJobPage({ params }: NewJobPageProps) {
               {/* Category */}
               <div className="space-y-2">
                 <Label htmlFor="category">{t('jobs.category')} *</Label>
-                <Select value={category} onValueChange={setCategory} required>
+                <Select value={category} onValueChange={(value) => setCategory(value || '')} required>
                   <SelectTrigger>
                     <SelectValue placeholder={locale === 'zh-HK' ? '選擇類別' : 'Select category'} />
                   </SelectTrigger>

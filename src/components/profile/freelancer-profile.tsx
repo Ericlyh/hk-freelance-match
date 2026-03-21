@@ -48,7 +48,7 @@ export function FreelancerProfile({
   const [name, setName] = useState(profile.name || '');
   const [bio, setBio] = useState(profile.bio || '');
   const [bioEn, setBioEn] = useState(profile.bio_en || '');
-  const [skills, setSkills] = useState<Skill[]>(profile.skills || []);
+  const [skills, setSkills] = useState<Skill[]>((profile.skills as unknown as Skill[] | undefined) || []);
   const [hourlyRate, setHourlyRate] = useState(profile.hourly_rate?.toString() || '');
   const [willingToTravel, setWillingToTravel] = useState(profile.willing_to_travel || false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);

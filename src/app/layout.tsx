@@ -13,10 +13,7 @@ export const metadata: Metadata = {
     default: 'HK Freelance Match',
     template: '%s | HK Freelance Match',
   },
-  description: {
-    en: 'The best platform connecting Hong Kong freelancers with businesses',
-    'zh-HK': '連接香港自由工作者與企業的最佳平台',
-  },
+  description: 'The best platform connecting Hong Kong freelancers with businesses',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -29,14 +26,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'HK Freelance Match',
-    title: {
-      en: 'HK Freelance Match',
-      'zh-HK': '香港自由工作者配對平台',
-    },
-    description: {
-      en: 'The best platform connecting Hong Kong freelancers with businesses',
-      'zh-HK': '連接香港自由工作者與企業的最佳平台',
-    },
+    title: 'HK Freelance Match',
+    description: 'The best platform connecting Hong Kong freelancers with businesses',
   },
 };
 

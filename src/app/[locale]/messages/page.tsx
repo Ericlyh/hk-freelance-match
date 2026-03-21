@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -15,18 +15,15 @@ import { Send, Paperclip, MessageSquare, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Message, Conversation, Profile } from '@/lib/supabase/types';
 
-interface MessagesPageProps {
-  params: Promise<{ locale: string }>;
-}
-
 interface ConversationWithDetails extends Conversation {
   other_user?: Profile;
   last_message?: Message;
   unread_count?: number;
 }
 
-export default function MessagesPage({ params }: MessagesPageProps) {
-  const { locale } = use(params) as { locale: string };
+export default function MessagesPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const t = useTranslations();
   const searchParams = useSearchParams();
   const supabase = createBrowserClient();

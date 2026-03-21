@@ -101,7 +101,7 @@ export default async function MyJobsPage({ params }: MyJobsPageProps) {
                         <span>{locale === 'zh-HK' ? '類別' : 'Category'}: </span>
                         <span className="font-medium">
                           {locale === 'zh-HK' 
-                            ? { photography: '攝影', videography: '錄像', graphicDesign: '平面設計', socialMedia: '社交媒體', copywriting: '文案', eventPlanning: '活動策劃', webDev: '網頁開發', branding: '品牌' }[job.category]
+                            ? ( { photography: '攝影', videography: '錄像', graphicDesign: '平面設計', socialMedia: '社交媒體', copywriting: '文案', eventPlanning: '活動策劃', webDev: '網頁開發', branding: '品牌' } as Record<string, string>)[job.category]
                             : job.category}
                         </span>
                       </div>
