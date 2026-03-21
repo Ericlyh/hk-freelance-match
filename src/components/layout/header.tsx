@@ -37,6 +37,7 @@ export function Header({ locale, user }: HeaderProps) {
     { href: `/${locale}/messages`, label: t('nav.messages'), icon: MessageSquare },
     { href: `/${locale}/how-it-works`, label: isZh ? '使用教學' : 'How It Works', icon: Briefcase },
     { href: `/${locale}/faq`, label: isZh ? '常見問題' : 'FAQ', icon: MessageSquare },
+    { href: `/${locale}/freelancers`, label: isZh ? '自由工作者' : 'Freelancers', icon: Users },
   ];
 
   const dashboardLink = user?.role === 'employer'
