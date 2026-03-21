@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Menu, User, LogOut, Settings, Briefcase, MessageSquare, Home } from 'lucide-react';
+import { Menu, User, LogOut, Settings, Briefcase, MessageSquare, Home, Users } from 'lucide-react';
 
 interface HeaderProps {
   locale: string;

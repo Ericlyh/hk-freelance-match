@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,7 @@ const skillLabels: Record<string, { zh: string; en: string }> = {
   branding: { zh: '品牌策劃', en: 'Branding' },
 };
 
-export default function FreelancersPage() {
+function FreelancersContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = params.locale as string;
@@ -182,5 +182,32 @@ export default function FreelancersPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function FreelancersLoading() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <div className="mb-2 h-9 w-48 animate-pulse rounded bg-muted" />
+        <div className="h-5 w-32 animate-pulse rounded bg-muted" />
+      </div>
+      <div className="mb-8">
+        <div className="h-24 animate-pulse rounded bg-muted" />
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-64 animate-pulse rounded bg-muted" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function FreelancersPage() {
+  return (
+    <Suspense fallback={<FreelancersLoading />}>
+      <FreelancersContent />
+    </Suspense>
   );
 }
