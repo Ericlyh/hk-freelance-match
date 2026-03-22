@@ -212,118 +212,177 @@ ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 
--- PROFILES POLICIES
-CREATE POLICY "Profiles are viewable by everyone"
-    ON profiles FOR SELECT USING (true);
+-- Helper: create policy only if not exists
+DO $$ DECLARE
+  _polname TEXT;
+  _schemaname TEXT := 'public';
+  _tablename TEXT;
+BEGIN
+  -- PROFILES POLICIES
+  _tablename := 'profiles';
+  _polname := 'Profiles are viewable by everyone';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT TO public USING (true);
+  END IF;
 
-CREATE POLICY "Users can insert their own profile"
-    ON profiles FOR INSERT WITH CHECK (auth.uid() = user_id);
+  _polname := 'Users can insert their own profile';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR INSERT WITH CHECK (auth.uid() = user_id);
+  END IF;
 
-CREATE POLICY "Users can update their own profile"
-    ON profiles FOR UPDATE USING (auth.uid() = user_id);
+  _polname := 'Users can update their own profile';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR UPDATE USING (auth.uid() = user_id);
+  END IF;
 
--- PORTFOLIO POLICIES
-CREATE POLICY "Portfolio items are viewable by everyone"
-    ON portfolio_items FOR SELECT USING (true);
+  -- PORTFOLIO POLICIES
+  _tablename := 'portfolio_items';
+  _polname := 'Portfolio items are viewable by everyone';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT USING (true);
+  END IF;
 
-CREATE POLICY "Users can insert portfolio items for their own profile"
-    ON portfolio_items FOR INSERT WITH CHECK (
-        EXISTS (SELECT 1 FROM profiles WHERE id = profile_id AND user_id = auth.uid())
+  _polname := 'Users can insert portfolio items for their own profile';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR INSERT WITH CHECK (
+      EXISTS (SELECT 1 FROM profiles WHERE id = profile_id AND user_id = auth.uid())
     );
+  END IF;
 
-CREATE POLICY "Users can delete their own portfolio items"
-    ON portfolio_items FOR DELETE USING (
-        EXISTS (SELECT 1 FROM profiles WHERE id = profile_id AND user_id = auth.uid())
+  _polname := 'Users can delete their own portfolio items';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR DELETE USING (
+      EXISTS (SELECT 1 FROM profiles WHERE id = profile_id AND user_id = auth.uid())
     );
+  END IF;
 
--- AVAILABILITY POLICIES
-CREATE POLICY "Availability is viewable by everyone"
-    ON availability FOR SELECT USING (true);
+  -- AVAILABILITY POLICIES
+  _tablename := 'availability';
+  _polname := 'Availability is viewable by everyone';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT USING (true);
+  END IF;
 
-CREATE POLICY "Users can manage availability for their own profile"
-    ON availability FOR ALL USING (
-        EXISTS (SELECT 1 FROM profiles WHERE id = profile_id AND user_id = auth.uid())
+  _polname := 'Users can manage availability for their own profile';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR ALL USING (
+      EXISTS (SELECT 1 FROM profiles WHERE id = profile_id AND user_id = auth.uid())
     );
+  END IF;
 
--- JOBS POLICIES
-CREATE POLICY "Jobs are viewable by everyone"
-    ON jobs FOR SELECT USING (true);
+  -- JOBS POLICIES
+  _tablename := 'jobs';
+  _polname := 'Jobs are viewable by everyone';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT USING (true);
+  END IF;
 
-CREATE POLICY "Employers can insert jobs for their account"
-    ON jobs FOR INSERT WITH CHECK (
-        EXISTS (SELECT 1 FROM profiles WHERE id = employer_id AND user_id = auth.uid() AND role = 'employer')
+  _polname := 'Employers can insert jobs for their account';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR INSERT WITH CHECK (
+      EXISTS (SELECT 1 FROM profiles WHERE id = employer_id AND user_id = auth.uid() AND role = 'employer')
     );
+  END IF;
 
-CREATE POLICY "Employers can update their own jobs"
-    ON jobs FOR UPDATE USING (auth.uid() = employer_id);
+  _polname := 'Employers can update their own jobs';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR UPDATE USING (auth.uid() = employer_id);
+  END IF;
 
-CREATE POLICY "Employers can delete their own jobs"
-    ON jobs FOR DELETE USING (auth.uid() = employer_id);
+  _polname := 'Employers can delete their own jobs';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR DELETE USING (auth.uid() = employer_id);
+  END IF;
 
--- APPLICATIONS POLICIES
-CREATE POLICY "Applications are viewable by job owner and applicant"
-    ON applications FOR SELECT USING (
-        auth.uid() = freelancer_id OR
-        EXISTS (SELECT 1 FROM jobs WHERE id = job_id AND employer_id IN (SELECT id FROM profiles WHERE user_id = auth.uid()))
+  -- APPLICATIONS POLICIES
+  _tablename := 'applications';
+  _polname := 'Applications are viewable by job owner and applicant';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT USING (
+      auth.uid() = freelancer_id OR
+      EXISTS (SELECT 1 FROM jobs WHERE id = job_id AND employer_id IN (SELECT id FROM profiles WHERE user_id = auth.uid()))
     );
+  END IF;
 
-CREATE POLICY "Freelancers can insert applications for open jobs"
-    ON applications FOR INSERT WITH CHECK (
-        auth.uid() = freelancer_id AND
-        EXISTS (SELECT 1 FROM jobs WHERE id = job_id AND status = 'open')
+  _polname := 'Freelancers can insert applications for open jobs';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR INSERT WITH CHECK (
+      auth.uid() = freelancer_id AND
+      EXISTS (SELECT 1 FROM jobs WHERE id = job_id AND status = 'open')
     );
+  END IF;
 
-CREATE POLICY "Applicants can update their own pending applications"
-    ON applications FOR UPDATE USING (
-        auth.uid() = freelancer_id AND status = 'pending'
+  _polname := 'Applicants can update their own pending applications';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR UPDATE USING (
+      auth.uid() = freelancer_id AND status = 'pending'
     );
+  END IF;
 
--- CONVERSATIONS POLICIES
-CREATE POLICY "Users can view their own conversations"
-    ON conversations FOR SELECT USING (
-        auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (participant_1, participant_2))
+  -- CONVERSATIONS POLICIES
+  _tablename := 'conversations';
+  _polname := 'Users can view their own conversations';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT USING (
+      auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (participant_1, participant_2))
     );
+  END IF;
 
-CREATE POLICY "Users can create conversations with other users"
-    ON conversations FOR INSERT WITH CHECK (
-        auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (participant_1, participant_2))
+  _polname := 'Users can create conversations with other users';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR INSERT WITH CHECK (
+      auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (participant_1, participant_2))
     );
+  END IF;
 
--- MESSAGES POLICIES
-CREATE POLICY "Users can view messages in their conversations"
-    ON messages FOR SELECT USING (
-        EXISTS (
-            SELECT 1 FROM conversations c
-            WHERE c.id = conversation_id
-            AND auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (c.participant_1, c.participant_2))
-        )
+  -- MESSAGES POLICIES
+  _tablename := 'messages';
+  _polname := 'Users can view messages in their conversations';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT USING (
+      EXISTS (
+        SELECT 1 FROM conversations c
+        WHERE c.id = conversation_id
+        AND auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (c.participant_1, c.participant_2))
+      )
     );
+  END IF;
 
-CREATE POLICY "Users can send messages in their conversations"
-    ON messages FOR INSERT WITH CHECK (
-        auth.uid() = sender_id AND
-        EXISTS (
-            SELECT 1 FROM conversations c
-            WHERE c.id = conversation_id
-            AND auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (c.participant_1, c.participant_2))
-        )
+  _polname := 'Users can send messages in their conversations';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR INSERT WITH CHECK (
+      auth.uid() = sender_id AND
+      EXISTS (
+        SELECT 1 FROM conversations c
+        WHERE c.id = conversation_id
+        AND auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (c.participant_1, c.participant_2))
+      )
     );
+  END IF;
 
--- BOOKINGS POLICIES
-CREATE POLICY "Users can view their own bookings"
-    ON bookings FOR SELECT USING (
-        auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (employer_id, freelancer_id))
+  -- BOOKINGS POLICIES
+  _tablename := 'bookings';
+  _polname := 'Users can view their own bookings';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR SELECT USING (
+      auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (employer_id, freelancer_id))
     );
+  END IF;
 
-CREATE POLICY "Employers can create bookings"
-    ON bookings FOR INSERT WITH CHECK (
-        auth.uid() IN (SELECT user_id FROM profiles WHERE id = employer_id AND role = 'employer')
+  _polname := 'Employers can create bookings';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR INSERT WITH CHECK (
+      auth.uid() IN (SELECT user_id FROM profiles WHERE id = employer_id AND role = 'employer')
     );
+  END IF;
 
-CREATE POLICY "Users can update bookings they're involved in"
-    ON bookings FOR UPDATE USING (
-        auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (employer_id, freelancer_id))
+  _polname := 'Users can update bookings they are involved in';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename) THEN
+    CREATE POLICY _polname ON _tablename FOR UPDATE USING (
+      auth.uid() IN (SELECT user_id FROM profiles WHERE id IN (employer_id, freelancer_id))
     );
+  END IF;
+END $$;
 
 -- ============================================
 -- REALTIME SETUP
@@ -342,37 +401,59 @@ INSERT INTO storage.buckets (id, name, public) VALUES
     ('attachments', 'attachments', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Storage policies
-CREATE POLICY "Anyone can view avatars"
-    ON storage.objects FOR SELECT USING (bucket_id = 'avatars');
+-- Storage policies (idempotent)
+DO $$ DECLARE
+  _polname TEXT;
+  _schemaname TEXT := 'public';
+  _tablename TEXT := 'objects';
+BEGIN
+  _polname := 'Anyone can view avatars';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'SELECT') THEN
+    CREATE POLICY _polname ON storage.objects FOR SELECT USING (bucket_id = 'avatars');
+  END IF;
 
-CREATE POLICY "Users can upload their own avatar"
-    ON storage.objects FOR INSERT WITH CHECK (
+  _polname := 'Users can upload their own avatar';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'INSERT') THEN
+    CREATE POLICY _polname ON storage.objects FOR INSERT WITH CHECK (
         bucket_id = 'avatars' AND auth.uid()::text = (storage.foldername(name))[1]
     );
+  END IF;
 
-CREATE POLICY "Anyone can view portfolio images"
-    ON storage.objects FOR SELECT USING (bucket_id = 'portfolio');
+  _polname := 'Anyone can view portfolio images';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'SELECT') THEN
+    CREATE POLICY _polname ON storage.objects FOR SELECT USING (bucket_id = 'portfolio');
+  END IF;
 
-CREATE POLICY "Users can upload to their portfolio"
-    ON storage.objects FOR INSERT WITH CHECK (
+  _polname := 'Users can upload to their portfolio';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'INSERT') THEN
+    CREATE POLICY _polname ON storage.objects FOR INSERT WITH CHECK (
         bucket_id = 'portfolio' AND auth.uid()::text = (storage.foldername(name))[1]
     );
+  END IF;
 
-CREATE POLICY "Anyone can view company logos"
-    ON storage.objects FOR SELECT USING (bucket_id = 'company-logos');
+  _polname := 'Anyone can view company logos';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'SELECT') THEN
+    CREATE POLICY _polname ON storage.objects FOR SELECT USING (bucket_id = 'company-logos');
+  END IF;
 
-CREATE POLICY "Users can upload their company logo"
-    ON storage.objects FOR INSERT WITH CHECK (
+  _polname := 'Users can upload their company logo';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'INSERT') THEN
+    CREATE POLICY _polname ON storage.objects FOR INSERT WITH CHECK (
         bucket_id = 'company-logos' AND auth.uid()::text = (storage.foldername(name))[1]
     );
+  END IF;
 
-CREATE POLICY "Authenticated users can upload attachments"
-    ON storage.objects FOR INSERT WITH CHECK (
+  _polname := 'Authenticated users can upload attachments';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'INSERT') THEN
+    CREATE POLICY _polname ON storage.objects FOR INSERT WITH CHECK (
         bucket_id = 'attachments' AND auth.uid() IS NOT NULL
     );
+  END IF;
 
-CREATE POLICY "Users can view attachments in their conversations"
-    ON storage.objects FOR SELECT USING (
+  _polname := 'Users can view attachments in their conversations';
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = _polname AND schemaname = _schemaname AND tablename = _tablename AND cmd = 'SELECT') THEN
+    CREATE POLICY _polname ON storage.objects FOR SELECT USING (
         bucket_id = 'attachments' AND auth.uid() IS NOT NULL
     );
+  END IF;
+END $$;
