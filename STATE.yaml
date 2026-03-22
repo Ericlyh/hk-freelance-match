@@ -99,10 +99,20 @@ tasks:
       - Calendar booking modal with date/time selection
 
   - id: T1-006
-    status: todo
+    status: done
     owner: dev-hk-freelance-match
     title: Admin Dashboard
-    notes: Not started - needs admin UI
+    commits:
+      - "feat(T1-006): Add Admin Dashboard with user management, job moderation, and analytics"
+    notes: |
+      - Admin dashboard at /[locale]/admin
+      - Stats overview: total users, jobs, active listings, applications
+      - User management: list users, view details, ban/unban
+      - Job moderation: list jobs, approve/reject
+      - Analytics: category breakdown, status distribution, user growth chart
+      - i18n support for zh-HK and en locales
+      - Build verified: npm run build passes
+      - Pushed to GitHub: commit 06fa329
 
   - id: T1-007
     status: done

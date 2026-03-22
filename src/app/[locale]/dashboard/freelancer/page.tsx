@@ -153,6 +153,17 @@ export default async function FreelancerDashboardPage({ params }: DashboardPageP
                 {t('nav.messages')}
               </Link>
             </Button>
+            <Button variant="outline" asChild>
+              <Link href={`/${locale}/dashboard/freelancer/applications`}>
+                <FileText className="mr-2 h-4 w-4" />
+                {locale === 'zh-HK' ? '我的申請' : 'My Applications'}
+                {pendingApplications.length > 0 && (
+                  <Badge variant="secondary" className="ml-2">
+                    {pendingApplications.length}
+                  </Badge>
+                )}
+              </Link>
+            </Button>
           </CardContent>
         </Card>
 
