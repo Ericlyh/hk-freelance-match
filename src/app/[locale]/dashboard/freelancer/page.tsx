@@ -5,8 +5,9 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Briefcase, DollarSign, FileText, MessageSquare, TrendingUp, ArrowRight } from 'lucide-react';
+import { Briefcase, DollarSign, FileText, MessageSquare, TrendingUp, ArrowRight, CalendarCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ReceivedBookingsSection } from '@/components/booking/received-bookings-section';
 
 interface DashboardPageProps {
   params: { locale: string };
@@ -268,6 +269,25 @@ export default async function FreelancerDashboardPage({ params }: DashboardPageP
           </div>
         </div>
       )}
+
+      {/* Received Bookings */}
+      <div>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-xl font-semibold">
+            <CalendarCheck className="h-5 w-5" />
+            {locale === 'zh-HK' ? '收到的預約' : 'Received Bookings'}
+          </h2>
+          <Button variant="ghost" size="sm" asChild>
+            <Link href={`/${locale}/bookings`}>
+              {locale === 'zh-HK' ? '查看全部' : 'View all'}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        {profile && (
+          <ReceivedBookingsSection locale={locale} userId={profile.id} />
+        )}
+      </div>
     </div>
   );
 }

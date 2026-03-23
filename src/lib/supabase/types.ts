@@ -123,6 +123,38 @@ export interface Database {
           is_available?: boolean
         }
       }
+      availability_slots: {
+        Row: {
+          id: string
+          freelancer_id: string
+          day_of_week: number | null
+          start_time: string
+          end_time: string
+          specific_date: string | null
+          is_available: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          freelancer_id: string
+          day_of_week?: number | null
+          start_time: string
+          end_time: string
+          specific_date?: string | null
+          is_available?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          freelancer_id?: string
+          day_of_week?: number | null
+          start_time?: string
+          end_time?: string
+          specific_date?: string | null
+          is_available?: boolean
+          created_at?: string
+        }
+      }
       jobs: {
         Row: {
           id: string
@@ -254,32 +286,44 @@ export interface Database {
       bookings: {
         Row: {
           id: string
+          job_id: string | null
           employer_id: string
           freelancer_id: string
-          job_id: string | null
-          date: string
-          time_slot: string
-          status: 'pending' | 'confirmed' | 'cancelled'
+          slot_date: string
+          slot_start: string
+          slot_end: string
+          amount: number
+          status: 'pending' | 'accepted' | 'declined' | 'escrow_funded' | 'completed' | 'cancelled' | 'refunded'
+          employer_notes: string | null
+          freelancer_notes: string | null
           created_at: string
         }
         Insert: {
           id?: string
+          job_id?: string | null
           employer_id: string
           freelancer_id: string
-          job_id?: string | null
-          date: string
-          time_slot: string
-          status?: 'pending' | 'confirmed' | 'cancelled'
+          slot_date: string
+          slot_start: string
+          slot_end: string
+          amount: number
+          status?: 'pending' | 'accepted' | 'declined' | 'escrow_funded' | 'completed' | 'cancelled' | 'refunded'
+          employer_notes?: string | null
+          freelancer_notes?: string | null
           created_at?: string
         }
         Update: {
           id?: string
+          job_id?: string | null
           employer_id?: string
           freelancer_id?: string
-          job_id?: string | null
-          date?: string
-          time_slot?: string
-          status?: 'pending' | 'confirmed' | 'cancelled'
+          slot_date?: string
+          slot_start?: string
+          slot_end?: string
+          amount?: number
+          status?: 'pending' | 'accepted' | 'declined' | 'escrow_funded' | 'completed' | 'cancelled' | 'refunded'
+          employer_notes?: string | null
+          freelancer_notes?: string | null
           created_at?: string
         }
       }
@@ -294,7 +338,7 @@ export interface Database {
       user_role: 'freelancer' | 'employer'
       job_status: 'open' | 'in_progress' | 'completed' | 'cancelled'
       application_status: 'pending' | 'accepted' | 'rejected'
-      booking_status: 'pending' | 'confirmed' | 'cancelled'
+      booking_status: 'pending' | 'accepted' | 'declined' | 'escrow_funded' | 'completed' | 'cancelled' | 'refunded'
     }
   }
 }
@@ -306,8 +350,14 @@ export type Updates<T extends keyof Database['public']['Tables']> = Database['pu
 export type Profile = Tables<'profiles'>
 export type PortfolioItem = Tables<'portfolio_items'>
 export type Availability = Tables<'availability'>
+export type AvailabilitySlot = Tables<'availability_slots'>
 export type Job = Tables<'jobs'> & { profiles?: Profile | null }
 export type Application = Tables<'applications'>
 export type Conversation = Tables<'conversations'>
 export type Message = Tables<'messages'>
 export type Booking = Tables<'bookings'>
+export type BookingWithRelations = Booking & {
+  employer_profile?: Profile | null
+  freelancer_profile?: Profile | null
+  job?: Job | null
+}

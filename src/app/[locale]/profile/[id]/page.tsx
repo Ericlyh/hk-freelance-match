@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { MapPin, DollarSign, Mail, Calendar } from 'lucide-react';
+import { BookingButton } from '@/components/booking/booking-button';
 
 interface ProfilePageProps {
   params: { locale: string; id: string };
@@ -36,6 +37,17 @@ export default async function PublicProfilePage({ params }: ProfilePageProps) {
   // Get current user to check if viewing own profile
   const { data: { user } } = await supabase.auth.getUser();
   const isOwnProfile = user?.id === profile.user_id;
+
+  // Get current user's profile to check role
+  let currentUserProfile: { id: string; role: string } | null = null;
+  if (user) {
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, role')
+      .eq('user_id', user.id)
+      .single();
+    currentUserProfile = data;
+  }
 
   if (profile.role === 'employer') {
     return (
@@ -126,13 +138,23 @@ export default async function PublicProfilePage({ params }: ProfilePageProps) {
                 )}
 
                 {!isOwnProfile && (
-                  <div className="mt-4 flex gap-2 justify-center md:justify-start">
+                  <div className="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
                     <Button asChild>
                       <Link href={`/${locale}/messages?user=${profile.user_id}`}>
                         <Mail className="mr-2 h-4 w-4" />
                         {locale === 'zh-HK' ? '發送訊息' : 'Send Message'}
                       </Link>
                     </Button>
+                    {currentUserProfile && currentUserProfile.role === 'employer' && (
+                      <BookingButton
+                        locale={locale}
+                        freelancerId={profile.id}
+                        freelancerName={profile.name || undefined}
+                        freelancerHourlyRate={profile.hourly_rate || undefined}
+                        userId={currentUserProfile.id}
+                        userRole="employer"
+                      />
+                    )}
                   </div>
                 )}
               </div>
