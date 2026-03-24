@@ -172,7 +172,7 @@ function FreelancersContent() {
 
                 {/* View Profile Button */}
                 <Button asChild className="w-full">
-                  <Link href={`/${locale}/profile/${freelancer.user_id}`}>
+                  <Link href={`/${locale}/profile/${freelancer.id}`}>
                     {isZh ? '查看檔案' : 'View Profile'}
                   </Link>
                 </Button>
