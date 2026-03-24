@@ -133,7 +133,7 @@ function FreelancersContent() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredFreelancers.map((freelancer) => (
-            <Card key={freelancer.user_id} className="transition-shadow hover:shadow-md">
+            <Card key={freelancer.id} className="transition-shadow hover:shadow-md">
               <CardContent className="p-6">
                 {/* Avatar */}
                 <div className="mb-4 flex justify-center">
